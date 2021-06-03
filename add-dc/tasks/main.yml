@@ -1,0 +1,20 @@
+- name: ping
+  win_ping:
+
+- name: install ad
+  win_domain_controller:
+    dc_primary: "dc1.test.com"
+    dns_domain_name: "local.test.com"
+    domain_admin_user: "{{ domain_admin }}"
+    domain_admin_password: "{{ domain_admin_password }}"
+    safe_mode_password: "{{ domain_safemode_password }}"
+    site_name: "AWS-MESO1"
+    state: domain_controller
+    log_path: C:\ansible_win_domain_controller.txt
+  register: ad
+ 
+- name: reboot server
+  win_reboot:
+    msg: "Installing AD. Rebooting..."
+    pre_reboot_delay: 15
+  when: ad.changed
